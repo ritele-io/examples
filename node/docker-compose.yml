@@ -1,0 +1,41 @@
+# Ritele plus two Node.js services: storefront-web -> orders-api.
+#   docker compose up --build
+#   Open http://localhost:8080 for the map; http://localhost:3000 sends traffic.
+# Each service's compose name matches its OTEL_SERVICE_NAME, so the host a call goes to is the box it lands on.
+services:
+  ritele:
+    image: ritele/ritele:0.0.36   # the current release; newer ones are listed at https://ritele.io/changelog/
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+
+  orders-api:
+    build: .
+    command: ["node", "--require", "./tracing.js", "api.js"]
+    environment:
+      OTEL_SERVICE_NAME: orders-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://ritele:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      PORT: "3001"
+    depends_on: [ritele]
+
+  storefront-web:
+    build: .
+    command: ["node", "--require", "./tracing.js", "web.js"]
+    environment:
+      OTEL_SERVICE_NAME: storefront-web
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://ritele:4318
+      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
+      PORT: "3000"
+      API_URL: http://orders-api:3001
+    ports:
+      - "3000:3000"
+    depends_on: [orders-api]
+
+  load:
+    image: curlimages/curl:latest
+    entrypoint: ["sh", "-c", "while true; do curl -s -o /dev/null http://storefront-web:3000/; sleep 1; done"]
+    depends_on: [storefront-web]

@@ -1,0 +1,20 @@
+# Ritele on its own, for your existing services to send telemetry to.
+#   docker compose up -d
+#   UI:   http://localhost:8080
+#   OTLP: localhost:4317 (gRPC), localhost:4318 (HTTP)
+services:
+  ritele:
+    image: ritele/ritele:0.0.36   # the current release; newer ones are listed at https://ritele.io/changelog/
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+    # Optional. See https://ritele.io/docs/ for every setting.
+    # environment:
+    #   RITELE_ADMIN_PASSWORD: ...   # first admin's password, 12 characters or more; without it one is printed in the logs
+    #   RITELE_LOGS: "on"            # store log lines in Ritele: off (the default), on, or loki
+    #   RITELE_USAGE_PING: "false"   # turn off the daily usage ping
+    #   RITELE_LICENCE_KEY: ...      # paid plans; checked offline
+    restart: unless-stopped

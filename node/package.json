@@ -1,0 +1,17 @@
+{
+  "name": "ritele-example-node",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Two Node.js services sending OpenTelemetry to Ritele",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@opentelemetry/auto-instrumentations-node": "^0.82.0",
+    "@opentelemetry/exporter-metrics-otlp-proto": "^0.300.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.300.0",
+    "@opentelemetry/sdk-metrics": "^3.0.0",
+    "@opentelemetry/sdk-node": "^0.300.0"
+  }
+}
