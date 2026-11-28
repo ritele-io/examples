@@ -43,7 +43,7 @@ docker compose logs ritele | grep -A3 'Ritele sign-in'
 
 The two services and the call between them appear within a minute.
 
-The examples pin `ritele/ritele:0.0.41`, the current release. Newer versions are in the [changelog](https://ritele.io/changelog/).
+The examples pin `ritele/ritele:0.0.42`, the current release. Newer versions are in the [changelog](https://ritele.io/changelog/).
 
 ## More
 
